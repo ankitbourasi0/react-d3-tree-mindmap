@@ -18,7 +18,8 @@ export default function App() {
   const [dialogPosition, setDialogPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [selectedNode, setSelectedNode] = useState<TreeNodeDatum | null>(null);
   const [newChildName, setNewChildName] = useState<string>('');
-  const [dimensions, translate, containerRef] = useCenteredTree();
+  const [dimensions, translate,containerRef ] = useCenteredTree();
+
   useEffect(() => {
     // console.log(data);
     setMindMapData(data);
@@ -106,7 +107,7 @@ export default function App() {
     }
   };
   return (
-    <div className="" style={{ width: "100vw", height: "100vh", backgroundColor: "#f1faee", color: "#1d3557" }} ref={containerRef}>
+    <div className="" style={{ width: "100vw", height: "100vh", backgroundColor: "#f1faee", color: "#1d3557" }}>
       <nav
         id="topNavBar"
         className="w-full h-[10vh] bg-[#457b9d] flex justify-around items-center fixed z-10"
@@ -201,6 +202,7 @@ export default function App() {
       <div id="treeWrapper" style={{ width: "100vw", height: "100vh" }}>
         {mindMapData && mindMapData !== undefined && (
           <Tree
+           ref={containerRef}
             data={mindMapData}
             pathFunc={edges}
             dimensions={dimensions}
