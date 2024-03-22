@@ -4,8 +4,8 @@ export const useCenteredTree = (defaultTranslate = { x: 0, y: 0 }) => {
    
     const [translate, setTranslate] = useState(defaultTranslate);
   const [dimensions, setDimensions] = useState();
-  const [containerRef, setcontainerRef] = useState()
-   containerRef = useCallback((containerElem) => {
+
+const   containerRef = useCallback((containerElem) => {
     if (containerElem !== null) {
       const { width, height } = containerElem.getBoundingClientRect();
       setDimensions({ width, height });
