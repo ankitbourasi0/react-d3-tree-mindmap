@@ -190,8 +190,8 @@ export default function App() {
           </div>
           <p>All Phases</p>
           <ul>
-            {selectedNode.children?.map((e) => (
-              <li>{e.name}</li>
+            {selectedNode.children?.map((e,id) => (
+              <li key={id}>{e.name}</li>
             ))}
           </ul>
         </div>
@@ -238,8 +238,8 @@ export default function App() {
               </button>
             </div>
             <select value={node} onChange={(e) => setNode(e.target.value)}>
-              {data.children?.map((child) => (
-                <option>{child.name}</option>
+              {data.children?.map((child,id) => (
+                <option key={id}>{child.name}</option>
               ))}
             </select>
             {/* //add node name */}
