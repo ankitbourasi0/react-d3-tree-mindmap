@@ -1,7 +1,6 @@
-import type { Config } from "tailwindcss";
 const plugin = require('tailwindcss/plugin');
 const { violet, blackA, mauve, green,purple,indigo } = require('@radix-ui/colors');
-const config: Config = {
+const config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -110,7 +109,7 @@ const config: Config = {
   plugins: [
     plugin(({ matchUtilities }) => {
       matchUtilities({
-        perspective: (value: any) => ({
+        perspective: (value) => ({
           perspective: value,
         }),
       });
