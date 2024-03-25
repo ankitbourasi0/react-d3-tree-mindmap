@@ -7,6 +7,12 @@ This is simple web app for understanding Mind map for demonstrating some work an
 - React-d3-tree
 - TailwindCss 
 
+## Usage 
+- Edge(Step,Diagonal,Step,Straight)
+- Orientation(Horizontal & Vertical)
+
+- Change in Sepration(sibling & non-siblings) add space between nodes
+- Node X,Y (Space Taken by 2 or more nodes & Edges )
 ## Getting Started
 
 First, run the development server:
