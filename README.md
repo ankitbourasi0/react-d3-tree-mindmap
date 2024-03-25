@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is simple web app for understanding Mind map for demonstrating some work and their phases, with Mind map users can see what are the phases(Parent nodes)how many processes(no. Of children nodes),I am working on the issue so we can add and delete process(Nodes) later
 
 ## Tech Skills
 - React(Typescript)
