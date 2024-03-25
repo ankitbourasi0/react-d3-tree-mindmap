@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Tech Skills
+- React(Typescript)
+- Next.js(14)
+- Radix-UI
+- React-d3-tree
+- TailwindCss 
+
 ## Getting Started
 
 First, run the development server:
