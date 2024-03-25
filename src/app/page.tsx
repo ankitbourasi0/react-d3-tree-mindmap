@@ -7,10 +7,11 @@ import { data } from "../app/utils/data";
 // Note how deeper levels are defined recursively via the `children` property.
 import { CustomNodeElementProps, TreeNodeDatum, RawNodeDatum } from "react-d3-tree";
 import HoverDialogBox from "./utils/HoverDialogBox";
-import { Box, Button, Select } from "@radix-ui/themes";
+import { Box, Button, Select, } from "@radix-ui/themes";
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { CaretDownIcon } from "@radix-ui/react-icons";
 
+import * as Label from '@radix-ui/react-label';
 import classNames from 'classnames';
 type Point = {
   x: number;
@@ -36,6 +37,10 @@ export default function App() {
   const [dialogPosition, setDialogPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [selectedNode, setSelectedNode] = useState<TreeNodeDatum | null>(null);
   const [newChildName, setNewChildName] = useState<string>('');
+  const [siblingsSepration, setSiblingsSepration] = useState<number>(1)
+const [nonSiblingsSepration, setNonSiblingsSepration] = useState<number>(2)
+const [nodeXSize, setnodeXSize] = useState<number>(120)
+const [nodeYSize, setnodeYSize] = useState<number>(120)
   var dialogTop = 0;
 
 
@@ -158,14 +163,15 @@ export default function App() {
 
 
   return (
-    <Box as="div" className="" style={{ width: "100vw", height: "100vh", backgroundColor: "#f1faee", color: "#1d3557" }} ref={containerRef}
+    <div className="" style={{ width: "100vw", height: "100vh", backgroundColor: "#f1faee", color: "#1d3557" }} ref={containerRef}
     >
 
       <NavigationMenu.Root className="relative z-[1] flex w-screen justify-center">
         <NavigationMenu.List className="center shadow-blackA4 m-0 flex list-none rounded-[6px] bg-white p-1 shadow-[0_2px_10px]">
+
           <NavigationMenu.Item>
             <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
-              Learn{' '}
+              Orientation{' '}
               <CaretDownIcon
                 className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
                 aria-hidden
@@ -173,11 +179,11 @@ export default function App() {
             </NavigationMenu.Trigger>
             <NavigationMenu.Content className="data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight absolute top-0 left-0 w-full sm:w-auto">
               <ul className="one m-0 grid list-none gap-x-[10px] p-[22px] sm:w-[200px] sm:grid-cols-1">
-              <li>
-                  <NavigationMenu.Link asChild onSelect={()=>setOrientation("horizontal")}>
+                <li>
+                  <NavigationMenu.Link asChild onSelect={() => setOrientation("horizontal")}>
                     <div
                       className={classNames(
-                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 font-medium hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
                       )}
                     >
                       <p className="text-mauve11 leading-[1.4]">Horizontal</p>
@@ -185,10 +191,10 @@ export default function App() {
                   </NavigationMenu.Link>
                 </li>
                 <li>
-                  <NavigationMenu.Link asChild onSelect={()=>setOrientation("vertical")}>
+                  <NavigationMenu.Link asChild onSelect={() => setOrientation("vertical")}>
                     <div
                       className={classNames(
-                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 font-medium hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
                       )}
                     >
                       <p className="text-mauve11 leading-[1.4]">Vertical</p>
@@ -200,8 +206,8 @@ export default function App() {
           </NavigationMenu.Item>
 
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
-              Overview{' '}
+            <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3  focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+              Edge{' '}
               <CaretDownIcon
                 className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
                 aria-hidden
@@ -209,13 +215,13 @@ export default function App() {
             </NavigationMenu.Trigger>
             <NavigationMenu.Content className="absolute top-0 left-0 w-full sm:w-auto">
               <ul className="m-0 grid list-none gap-x-[10px] p-[22px] sm:w-[400px] sm:grid-flow-col sm:grid-rows-1">
-                
+
 
                 <li>
-                  <NavigationMenu.Link asChild onSelect={()=>setEdges("elbow")}>
+                  <NavigationMenu.Link asChild onSelect={() => setEdges("elbow")}>
                     <div
                       className={classNames(
-                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3  font-medium block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
                       )}
                     >
                       <p className="text-mauve11 leading-[1.4]">Elbow</p>
@@ -223,10 +229,10 @@ export default function App() {
                   </NavigationMenu.Link>
                 </li>
                 <li>
-                  <NavigationMenu.Link asChild onSelect={()=>setEdges("diagonal")}>
+                  <NavigationMenu.Link asChild onSelect={() => setEdges("diagonal")}>
                     <div
                       className={classNames(
-                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3  font-medium block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
                       )}
                     >
                       <p className="text-mauve11 leading-[1.4]">Diagonal</p>
@@ -234,10 +240,10 @@ export default function App() {
                   </NavigationMenu.Link>
                 </li>
                 <li>
-                  <NavigationMenu.Link asChild onSelect={()=>setEdges("step")}>
+                  <NavigationMenu.Link asChild onSelect={() => setEdges("step")}>
                     <div
                       className={classNames(
-                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 font-medium block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
                       )}
                     >
                       <p className="text-mauve11 leading-[1.4]">Step</p>
@@ -245,15 +251,101 @@ export default function App() {
                   </NavigationMenu.Link>
                 </li>
                 <li>
-                  <NavigationMenu.Link asChild onSelect={()=>setEdges("straight")}>
+                  <NavigationMenu.Link asChild onSelect={() => setEdges("straight")}>
                     <div
                       className={classNames(
-                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors font-medium                        ',
                       )}
                     >
                       <p className="text-mauve11 leading-[1.4]">Straight</p>
                     </div>
                   </NavigationMenu.Link>
+                </li>
+              </ul>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+
+
+
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+              Sepration{' '}
+              <CaretDownIcon
+                className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
+                aria-hidden
+              />
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content className="data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight absolute top-0 left-0 w-full sm:w-auto">
+              <ul className="one m-0 grid list-none gap-x-[10px] p-[22px] sm:w-[500px] sm:grid-cols-1 ">
+
+                <li >
+                  <div className="flex flex-wrap items-center gap-[15px] px-5">
+                    <Label.Root className="text-[15px] font-medium leading-[35px] text-blackA10" htmlFor="firstName">
+                     Sibling Neighbour
+                    </Label.Root>
+                    <input
+                      className=" shadow-blackA6 inline-flex h-[35px] w-[200px] appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-blackA10 shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA6"
+                      type="number"
+                      id="sepration"
+                      onChange={(e)=>setSiblingsSepration(e.target.valueAsNumber as number)}
+                      defaultValue="Step number"
+                    />
+                  </div>
+                  <div className="flex flex-wrap items-center gap-[15px] px-5 mt-5">
+                    <Label.Root className="text-[15px] font-medium leading-[35px] text-blackA10" htmlFor="firstName">
+                     Non-Sibling Neighbour
+                    </Label.Root>
+                    <input
+                      className=" shadow-blackA6 inline-flex h-[35px] w-[200px] appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-blackA10 shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA6"
+                      type="number"
+                      id="sepration"
+                      onChange={(e)=>setNonSiblingsSepration(e.target.valueAsNumber as number)}
+                      defaultValue="Step number"
+                    />
+                  </div>
+
+                </li>
+              </ul>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+              Node Size{' '}
+              <CaretDownIcon
+                className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
+                aria-hidden
+              />
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content className="data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight absolute top-0 left-0 w-full sm:w-auto">
+              <ul className="one m-0 grid list-none gap-x-[10px] p-[22px] sm:w-[500px] sm:grid-cols-1 ">
+
+                <li >
+                  <div className="flex flex-wrap items-center gap-[15px] px-5">
+                    <Label.Root className="text-[15px] font-medium leading-[35px] text-blackA10" htmlFor="firstName">
+                     X 
+                    </Label.Root>
+                    <input
+                      className=" shadow-blackA6 inline-flex h-[35px] w-[200px] appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-blackA10 shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA6"
+                      type="number"
+                      id="x-size"
+                      onChange={(e)=>setnodeXSize(e.target.valueAsNumber as number)}
+                      defaultValue="Step number"
+                    />
+                  </div>
+                  <div className="flex flex-wrap items-center gap-[15px] px-5 mt-5">
+                    <Label.Root className="text-[15px] font-medium leading-[35px] text-blackA10" htmlFor="firstName">
+                    Y
+                    </Label.Root>
+                    <input
+                      className=" shadow-blackA6 inline-flex h-[35px] w-[200px] appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-blackA10 shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA6"
+                      type="number"
+                      id="ysize"
+                      onChange={(e)=>setnodeYSize(e.target.valueAsNumber as number)}
+                      defaultValue="Step number"
+                    />
+                  </div>
+
                 </li>
               </ul>
             </NavigationMenu.Content>
@@ -331,7 +423,15 @@ export default function App() {
             pathFunc={edges}
             dimensions={dimensions}
             translate={translate}
-
+            depthFactor={150}
+            separation={{
+              siblings: siblingsSepration,
+              nonSiblings: nonSiblingsSepration
+            }}
+            nodeSize={{
+              x:nodeXSize,
+              y:nodeYSize
+            }}
             orientation={orientation}
             renderCustomNodeElement={renderCustomNode}
           />
@@ -339,6 +439,6 @@ export default function App() {
       </div>
 
 
-    </Box >
+    </div >
   );
 }
