@@ -1,25 +1,61 @@
 "use client"
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Tree from "react-d3-tree";
 import { data } from "../app/utils/data";
 // Note how deeper levels are defined recursively via the `children` property.
 import { CustomNodeElementProps, TreeNodeDatum, RawNodeDatum } from "react-d3-tree";
-import { useCenteredTree } from "../app/utils/helpers"
+import HoverDialogBox from "./utils/HoverDialogBox";
+import { Box, Button, Select } from "@radix-ui/themes";
+import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import { CaretDownIcon } from "@radix-ui/react-icons";
+
+import classNames from 'classnames';
+type Point = {
+  x: number;
+  y: number;
+};
+
+type ListProps = {
+  chidren: Readonly<{
+    children: React.ReactNode;
+  }>;
+  title: string
+
+}
+
+type Dimensions = { width: number; height: number } | undefined;
 export default function App() {
   const [mindMapData, setMindMapData] = useState<TreeNodeDatum | null>();
   const [orientation, setOrientation] = useState<"vertical" | "horizontal">("vertical");
   const [edges, setEdges] = useState<"straight" | "step" | "diagonal" | "elbow">("straight");
-  const [open, setOpen] = useState<boolean>(false);
   const [node, setNode] = useState<string>("");
   const [nodeName, setNodeName] = useState<string>("");
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [dialogPosition, setDialogPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [selectedNode, setSelectedNode] = useState<TreeNodeDatum | null>(null);
   const [newChildName, setNewChildName] = useState<string>('');
-  const [dimensions, translate,containerRef ] = useCenteredTree();
+  var dialogTop = 0;
 
+
+  const [dimensions, setDimensions] = useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
+  const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
+
+
+  const containerRef = useCallback((containerElem: HTMLDivElement) => {
+    if (containerElem !== null) {
+
+
+      const { width, height } = containerElem.getBoundingClientRect();
+      setTranslate({ x: width / 2, y: height / 2 });
+
+      setDimensions({ width, height });
+    }
+  }, []);
   useEffect(() => {
     // console.log(data);
     setMindMapData(data);
@@ -27,73 +63,84 @@ export default function App() {
     //   console.log(mindMapData.children.map((child) => child.children));
   }, []);
 
-  // const handleAddNode = () => {
-  //   if (nodeName !== null) {
-  //     const updatedMindMapData = deepCopy(mindMapData);
-  //     const updatedChildren = updatedMindMapData.children.map((child) => {
-  //       if (child.name === node.toString()) {
-  //         console.log("Selected Node: ", child.name);
-  //         return {
-  //           ...child,
-  //           children: [...child.children, { name: nodeName, children: [] }],
-  //         };
-  //       }
-  //       return deepCopy(child);
-  //     });
-  //     updatedMindMapData.children = updatedChildren;
-  //     setMindMapData(updatedMindMapData);
-  //     console.log(updatedMindMapData.children);
-  //   } else {
-  //     alert("Please Enter Node Name");
-  //   }
-  //   setOpen((prev) => !prev);
-  // };
+  const handleAddNode = () => {
+    if (nodeName !== "") {
+
+      const updatedMindMapData = deepCopy(mindMapData);
+      const updatedChildren = updatedMindMapData?.children?.map((child) => {
+        if (child.name === nodeName.toString()) {
+          console.log("Selected Node: ", child.name);
+          return {
+            ...child,
+            children: [...child.children!, { name: nodeName, children: [] }],
+          };
+        }
+        return deepCopy(child);
+      });
+      updatedMindMapData?.children != updatedChildren;
+      setMindMapData(updatedMindMapData);
+      console.log(updatedMindMapData?.children);
+    } else {
+      alert("Please Enter Node Name");
+    }
+
+  };
 
   // // Helper function to create a deep copy of an object or array
-  // const deepCopy = (obj) => {
-  //   if (typeof obj !== "object" || obj === null) {
-  //     return obj;
-  //   }
-  //   if (Array.isArray(obj)) {
-  //     return obj.map(deepCopy);
-  //   }
-  //   const newObj = {};
-  //   for (const key in obj) {
-  //     newObj[key] = deepCopy(obj[key]);
-  //   }
-  //   return newObj;
-  // };
+  function deepCopy<T>(obj: T): T {
+    if (typeof obj !== "object" || obj === null) {
+      return obj;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(deepCopy) as T;
+    }
+    const newObj = {} as T;
+    for (const key in obj) {
+      newObj[key as keyof T] = deepCopy(obj[key]);
+    }
+    return newObj;
+  };
+
 
   const renderCustomNode = (props: CustomNodeElementProps) => {
+
     const handleNodeMouseOver = (node: TreeNodeDatum, evt: React.MouseEvent) => {
-      setShowDialog(true);
-      setDialogPosition({ x: evt.clientX, y: evt.clientY });
-      setSelectedNode(node); // Set the selected node
+      // dialogTop = evt.clientY - 100;
+      // setShowDialog(true);
+      // setDialogPosition({ x: evt.clientX, y: evt.clientY });
+      // setSelectedNode(node); // Set the selected node
       console.log("Mouse over node:", node);
+      setNodeName("Ankit")
+      handleAddChild
     };
 
-    const handleNodeMouseOut = () => {
-      setShowDialog(false);
+
+    const handleNodeMouseOut = (evt: React.MouseEvent) => {
+      setDialogPosition({ x: evt.clientX, y: dialogTop });
       setSelectedNode(null); // Reset the selected node
     };
 
-
+    const childNode: RawNodeDatum[] = [{ name: "ankit", children: [] }]
 
     return (
       <g
         onMouseOver={(event: React.MouseEvent) => {
           handleNodeMouseOver(props.nodeDatum, event);
         }}
-        onMouseOut={handleNodeMouseOut}
+      // onMouseOut={(event:React.MouseEvent)=>handleNodeMouseOut(event)}
       >
-        <foreignObject x="-30" y="-20" className="w-32 h-16 "  >
-          <button
-            className="px-2 py-1 rounded-md bg-[#1d3557] text-white"
 
-            onClick={props.toggleNode}
+        <foreignObject x="-30" y="-20" className="w-full max-w-[50px] h-20 "  >
+          <Button variant="solid"
+            className=""
+
+            onClick={() => console.log(props.nodeDatum)}
           >
-            {props.nodeDatum.name}
-          </button>
+
+
+            <HoverDialogBox key={props.nodeDatum.name} nodeName={props.nodeDatum.name as string} nodeChildren={props.nodeDatum?.children} props={props} setNodeName={setNodeName} handleAddNode={handleAddNode} />
+
+          </Button>
         </foreignObject>
       </g>
     );
@@ -106,56 +153,134 @@ export default function App() {
       setNewChildName(''); // Reset the input field
     }
   };
+
+
+
+
   return (
-    <div className="" style={{ width: "100vw", height: "100vh", backgroundColor: "#f1faee", color: "#1d3557" }}>
-      <nav
-        id="topNavBar"
-        className="w-full h-[10vh] bg-[#457b9d] flex justify-around items-center fixed z-10"
-      >
-        <ul
-          className="list-none flex justify-around items-center max-w-2xl w-full"
-          id="nav"
+    <Box as="div" className="" style={{ width: "100vw", height: "100vh", backgroundColor: "#f1faee", color: "#1d3557" }} ref={containerRef}
+    >
 
-        >
-          <li className="md:space-x-2 ">
-            <label htmlFor="orientation" style={{ color: "white" }}>
-              Orientation
-            </label>
+      <NavigationMenu.Root className="relative z-[1] flex w-screen justify-center">
+        <NavigationMenu.List className="center shadow-blackA4 m-0 flex list-none rounded-[6px] bg-white p-1 shadow-[0_2px_10px]">
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+              Learn{' '}
+              <CaretDownIcon
+                className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
+                aria-hidden
+              />
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content className="data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight absolute top-0 left-0 w-full sm:w-auto">
+              <ul className="one m-0 grid list-none gap-x-[10px] p-[22px] sm:w-[200px] sm:grid-cols-1">
+              <li>
+                  <NavigationMenu.Link asChild onSelect={()=>setOrientation("horizontal")}>
+                    <div
+                      className={classNames(
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                      )}
+                    >
+                      <p className="text-mauve11 leading-[1.4]">Horizontal</p>
+                    </div>
+                  </NavigationMenu.Link>
+                </li>
+                <li>
+                  <NavigationMenu.Link asChild onSelect={()=>setOrientation("vertical")}>
+                    <div
+                      className={classNames(
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                      )}
+                    >
+                      <p className="text-mauve11 leading-[1.4]">Vertical</p>
+                    </div>
+                  </NavigationMenu.Link>
+                </li>
+              </ul>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
 
-            <select
-              value={orientation}
-              onChange={(e) => setOrientation(e.target.value as "vertical" | "horizontal")}
-              name="orientation"
-              className="bg-[#f1faee] rounded-sm px-[2px]"
-              id="orientation"
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+              Overview{' '}
+              <CaretDownIcon
+                className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
+                aria-hidden
+              />
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content className="absolute top-0 left-0 w-full sm:w-auto">
+              <ul className="m-0 grid list-none gap-x-[10px] p-[22px] sm:w-[400px] sm:grid-flow-col sm:grid-rows-1">
+                
+
+                <li>
+                  <NavigationMenu.Link asChild onSelect={()=>setEdges("elbow")}>
+                    <div
+                      className={classNames(
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                      )}
+                    >
+                      <p className="text-mauve11 leading-[1.4]">Elbow</p>
+                    </div>
+                  </NavigationMenu.Link>
+                </li>
+                <li>
+                  <NavigationMenu.Link asChild onSelect={()=>setEdges("diagonal")}>
+                    <div
+                      className={classNames(
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                      )}
+                    >
+                      <p className="text-mauve11 leading-[1.4]">Diagonal</p>
+                    </div>
+                  </NavigationMenu.Link>
+                </li>
+                <li>
+                  <NavigationMenu.Link asChild onSelect={()=>setEdges("step")}>
+                    <div
+                      className={classNames(
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                      )}
+                    >
+                      <p className="text-mauve11 leading-[1.4]">Step</p>
+                    </div>
+                  </NavigationMenu.Link>
+                </li>
+                <li>
+                  <NavigationMenu.Link asChild onSelect={()=>setEdges("straight")}>
+                    <div
+                      className={classNames(
+                        'focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors',
+                      )}
+                    >
+                      <p className="text-mauve11 leading-[1.4]">Straight</p>
+                    </div>
+                  </NavigationMenu.Link>
+                </li>
+              </ul>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+
+          <NavigationMenu.Item>
+            <NavigationMenu.Link
+              className="text-violet11 hover:bg-violet3 focus:shadow-violet7 block select-none rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none no-underline outline-none focus:shadow-[0_0_0_2px]"
+              href="https://github.com/ankitbourasi0"
             >
-              <option value="vertical">Vertical</option>
-              <option value="horizontal">Horizontal</option>
-            </select>
-          </li>
-          <li className="md:space-x-2 ">
-            <label htmlFor="edges" style={{ color: "white" }}>
-              Edges
-            </label>
+              Github
+            </NavigationMenu.Link>
+          </NavigationMenu.Item>
 
-            <select
-              value={edges}
-              onChange={(e) => setEdges(e.target.value as "straight" | "step" | "diagonal" | "elbow")}
-              name="edges"
-              className="bg-[#f1faee] rounded-sm px-[2px]"
-              id="edges"
-            >
-              <option value="straight">Straight </option>
-              <option value="step">Step</option>
-              <option value="diagonal">Diagonal</option>
-              <option value="elbow">Elbow</option>
-            </select>
-          </li>
-        </ul>
-      </nav>
+          <NavigationMenu.Indicator className="data-[state=visible]:animate-fadeIn data-[state=hidden]:animate-fadeOut top-full z-[1] flex h-[10px] items-end justify-center overflow-hidden transition-[width,transform_250ms_ease]">
+            <div className="relative top-[70%] h-[10px] w-[10px] rotate-[45deg] rounded-tl-[2px] bg-white" />
+          </NavigationMenu.Indicator>
+        </NavigationMenu.List>
+
+        <div className="perspective-[2000px] absolute top-full left-0 flex w-full justify-center">
+          <NavigationMenu.Viewport className="data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut relative mt-[10px] h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[6px] bg-white transition-[width,_height] duration-300 sm:w-[var(--radix-navigation-menu-viewport-width)]" />
+        </div>
+      </NavigationMenu.Root>
+
 
       {/* //showing the Dialog at position of client mouse  */}
-      {showDialog && selectedNode && (
+      {/* {showDialog && selectedNode && (
         <div
           style={{
             position: "fixed",
@@ -191,102 +316,29 @@ export default function App() {
           </div>
           <p>All Phases</p>
           <ul>
-            {selectedNode.children?.map((e,id) => (
+            {selectedNode.children?.map((e, id) => (
               <li key={id}>{e.name}</li>
             ))}
           </ul>
         </div>
-      )}
+      )} */}
 
       {/* // `<Tree />` will fill width/height of its container; in this case `#treeWrapper`. */}
       <div id="treeWrapper" style={{ width: "100vw", height: "100vh" }}>
         {mindMapData && mindMapData !== undefined && (
           <Tree
-           ref={containerRef}
             data={mindMapData}
             pathFunc={edges}
             dimensions={dimensions}
             translate={translate}
-          
-            // collapsible={false}
-            // enableLegacyTransitions={true}
+
             orientation={orientation}
             renderCustomNodeElement={renderCustomNode}
           />
         )}
       </div>
-      {/* // Dialog Box */}
-      {open && (
-        <div
-          id="modal"
-          className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-20"
 
-        >
-          <div
-            id="modal-content"
-            className="max-w-[400px] w-full bg-white p-5 rounded-md flex flex-col"
 
-          >
-            <div
-              className=""
-              style={{ width: "100%", textAlign: "right", margin: "10px" }}
-            >
-              <button
-                onClick={() => setOpen((prev) => !prev)}
-                className=""
-                style={{ float: "right" }}
-              >
-                Back
-              </button>
-            </div>
-            <select value={node} onChange={(e) => setNode(e.target.value)}>
-              {data.children?.map((child,id) => (
-                <option key={id}>{child.name}</option>
-              ))}
-            </select>
-            {/* //add node name */}
-            <div>
-              <label htmlFor="node-name">Node Name:</label>
-              <input
-                type="text"
-                id="node-name"
-                value={nodeName}
-                onChange={(e) => setNodeName(e.target.value)}
-              />
-            </div>
-            {/* <button
-              id="add-node"
-              onClick={handleAddNode}
-              style={{
-                marginTop: "10px",
-                padding: "10px 20px",
-                borderRadius: "5px",
-                backgroundColor: "coral",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Add Node
-            </button> */}
-          </div>
-        </div>
-      )}
-      <nav
-        id="bottom-nav-bar"
-        className="w-full h-[10vh] flex justify-around items-center fixed bottom-0 z-10 bg-[#457b9d]"
-
-      >
-        <button
-          className="bg-[#e63946] border-none rounded-md px-2 py-3 text-white "
-
-          onClick={() => {
-            setOpen((prev) => !prev);
-          }}
-        >
-          Add node
-        </button>
-      </nav>
-    </div>
+    </Box >
   );
 }
