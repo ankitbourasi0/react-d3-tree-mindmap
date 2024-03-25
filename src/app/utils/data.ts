@@ -18,22 +18,57 @@ export const data: TreeNodeDatum = {
               children: [
                 {
                   name: "Online",
+                  __rd3t: {
+                    id: "",
+                    depth: 0,
+                    collapsed: false,
+                  },
                 },
                 {
                   name: "Interview",
+                  __rd3t: {
+                    id: "",
+                    depth: 0,
+                    collapsed: false,
+                  },
                 },
                 {
                   name: "Public Data",
+                  __rd3t: {
+                    id: "",
+                    depth: 0,
+                    collapsed: false,
+                  },
                 },
                 {
                   name: "Health",
+                  __rd3t: {
+                    id: "",
+                    depth: 0,
+                    collapsed: false,
+                  },
                 },
               ],
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
             {
               name: "B2C",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false,
+              },
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false,
+          },
         },
         {
           name: "Internal",
@@ -41,10 +76,25 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false,
+              },
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
       ],
+      __rd3t: {
+        id: "",
+        depth: 0,
+        collapsed: false
+      }
     },
     {
       name: "Planning",
@@ -56,8 +106,18 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
         {
           name: "Specs",
@@ -65,10 +125,25 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
       ],
+      __rd3t: {
+        id: "",
+        depth: 0,
+        collapsed: false
+      }
     },
     {
       name: "Designing",
@@ -80,8 +155,18 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
         {
           name: "Software",
@@ -89,10 +174,25 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
       ],
+      __rd3t: {
+        id: "",
+        depth: 0,
+        collapsed: false
+      }
     },
     {
       name: "Manufacturing",
@@ -104,8 +204,18 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
         {
           name: "Production",
@@ -113,10 +223,25 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
       ],
+      __rd3t: {
+        id: "",
+        depth: 0,
+        collapsed: false
+      }
     },
     {
       name: "Sales/Marketing",
@@ -128,8 +253,18 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
         {
           name: "Dealership",
@@ -137,10 +272,30 @@ export const data: TreeNodeDatum = {
           children: [
             {
               name: "Worker",
+              __rd3t: {
+                id: "",
+                depth: 0,
+                collapsed: false
+              }
             },
           ],
+          __rd3t: {
+            id: "",
+            depth: 0,
+            collapsed: false
+          }
         },
       ],
+      __rd3t: {
+        id: "",
+        depth: 0,
+        collapsed: false
+      }
     },
   ],
+  __rd3t: {
+    id: "",
+    depth: 0,
+    collapsed: false
+  }
 };
